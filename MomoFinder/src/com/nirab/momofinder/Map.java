@@ -1,13 +1,6 @@
 package com.nirab.momofinder;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-
 import org.osmdroid.DefaultResourceProxyImpl;
 import org.osmdroid.ResourceProxy;
 import org.osmdroid.tileprovider.MapTileProviderArray;
@@ -15,6 +8,7 @@ import org.osmdroid.tileprovider.modules.IArchiveFile;
 import org.osmdroid.tileprovider.modules.MBTilesFileArchive;
 import org.osmdroid.tileprovider.modules.MapTileFileArchiveProvider;
 import org.osmdroid.tileprovider.modules.MapTileModuleProviderBase;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.tileprovider.util.SimpleRegisterReceiver;
 import org.osmdroid.util.GeoPoint;
@@ -27,10 +21,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.location.Location;
 import android.location.LocationListener;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
 
 public class Map extends Activity implements LocationListener{
@@ -49,31 +41,8 @@ public class Map extends Activity implements LocationListener{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
-		mProgressDialog = new ProgressDialog(getApplicationContext());
-		mProgressDialog.setMessage("Please wait while the map file is downloading");
-		mProgressDialog.setIndeterminate(false);
-		mProgressDialog.setMax(100);
-		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		
 		try{
-		String packageDir = "/osmdroid";
-	    String p = Environment.getExternalStorageDirectory() + packageDir;
-	    File f = new File(p, "momofind_ktm.mbtiles");
-	    boolean filename = f.exists();
-	    if (filename){
-	    	Log.i("Checking if File Exists","File Exist");
-	    }
-	    else{
-	    	Log.i("Checking if File Exists","File Does not Exist");
-	    	DownloadFile downloadFile = new DownloadFile();
-	    	downloadFile.execute("https://dl.dropboxusercontent.com/u/95497883/RingRoad.mbtiles");
-	    	}
-		}
-		catch(Exception IO){
-	    	DownloadFile downloadFile = new DownloadFile();
-	    	downloadFile.execute("https://dl.dropboxusercontent.com/u/95497883/RingRoad.mbtiles");
-	    }
-	
 		
 		/**
 		    * This whole thing revolves around instantiating a MapView class, way,
@@ -162,10 +131,15 @@ public class Map extends Activity implements LocationListener{
 		 
 		    // Set the MapView as the root View for this Activity; done!
 		    setContentView(mv);
+		    
+		}
+		catch(Exception IO){
+			setContentView(R.layout.map);
+			mv = (MapView) findViewById(R.id.mapview);
+			mv.setTileSource(TileSourceFactory.MAPNIK);
+			}
 		
-//		setContentView(R.layout.map);
-//		mv = (MapView) findViewById(R.id.mapview);
-//		mv.setTileSource(TileSourceFactory.MAPNIK);
+	
 		mv.setBuiltInZoomControls(true);
 		mv.setMultiTouchControls(true);
 		mv.setClickable(true);
@@ -177,67 +151,7 @@ public class Map extends Activity implements LocationListener{
 		
 	}
 		
-	public class DownloadFile extends AsyncTask<String, Integer, String>{
-
-		@Override
-		protected String doInBackground(String...sUrl) {
-			// TODO Auto-generated method stub
-			try{
-				//setting url connection 
-				URL url = new URL(sUrl[0]);
-				Log.i(sUrl[0],sUrl[0]);
-				URLConnection connection = url.openConnection();
-				connection.connect();
-				
-				//used for showin progress bar
-				int fileLength = connection.getContentLength();
-				
-				//downloading the file
-				InputStream input = new BufferedInputStream(url.openStream());
-				OutputStream output = new FileOutputStream("/mtn/sdcard/osmdroid/momofind_ktm.mbtiles");
-				
-				
-				byte data[] = new byte[1024];
-				long total = 0;
-				int count;
-				while ((count = input.read(data))!= -1){
-					total += count;
-					publishProgress((int) (total * 100/fileLength));
-					output.write(data,0,count);
-				}
-				output.flush();
-				output.close();
-				input.close();
-				
-			}
-			catch(Exception e){
-				
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-		}
-
-		@Override
-		protected void onPreExecute() {
-			// TODO Auto-generated method stub
-			super.onPreExecute();
-			mProgressDialog.show();
-		}
-
-		@Override
-		protected void onProgressUpdate(Integer... progress) {
-			// TODO Auto-generated method stub
-			super.onProgressUpdate(progress);
-			mProgressDialog.setProgress(progress[0]);
-		}
 		
-}
-	
 	
 
 private void findCurrentLocation() {
