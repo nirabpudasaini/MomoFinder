@@ -55,6 +55,26 @@ public class Map extends Activity implements LocationListener{
 		mProgressDialog.setMax(100);
 		mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		
+		try{
+		String packageDir = "/osmdroid";
+	    String p = Environment.getExternalStorageDirectory() + packageDir;
+	    File f = new File(p, "momofind_ktm.mbtiles");
+	    boolean filename = f.exists();
+	    if (filename){
+	    	Log.i("Checking if File Exists","File Exist");
+	    }
+	    else{
+	    	Log.i("Checking if File Exists","File Does not Exist");
+	    	DownloadFile downloadFile = new DownloadFile();
+	    	downloadFile.execute("https://dl.dropboxusercontent.com/u/95497883/RingRoad.mbtiles");
+	    	}
+		}
+		catch(Exception IO){
+	    	DownloadFile downloadFile = new DownloadFile();
+	    	downloadFile.execute("https://dl.dropboxusercontent.com/u/95497883/RingRoad.mbtiles");
+	    }
+	
+		
 		/**
 		    * This whole thing revolves around instantiating a MapView class, way,
 		    * way below. And MapView requires a ResourceProxy. Who are we to deny
@@ -112,12 +132,7 @@ public class Map extends Activity implements LocationListener{
 		    */
 		    String packageDir = "/osmdroid";
 		    String p = Environment.getExternalStorageDirectory() + packageDir;
-		    Log.i(p, p);
-		    File f = new File(p, "ktmbkt.mbtiles");
-		    if (f.exists()== false){
-		    	DownloadFile downloadFile = new DownloadFile();
-		    	downloadFile.execute("https://dl.dropboxusercontent.com/u/95497883/RingRoad.mbtiles");
-		    }
+		    File f = new File(p, "momofind_ktm.mbtiles");
 		    IArchiveFile[] files = { MBTilesFileArchive.getDatabaseFileArchive(f) };
 		 
 		    MapTileModuleProviderBase moduleProvider;
@@ -170,6 +185,7 @@ public class Map extends Activity implements LocationListener{
 			try{
 				//setting url connection 
 				URL url = new URL(sUrl[0]);
+				Log.i(sUrl[0],sUrl[0]);
 				URLConnection connection = url.openConnection();
 				connection.connect();
 				
@@ -178,7 +194,7 @@ public class Map extends Activity implements LocationListener{
 				
 				//downloading the file
 				InputStream input = new BufferedInputStream(url.openStream());
-				OutputStream output = new FileOutputStream("/mtn/sdcard/osmdroid/ktmbkt.mbtiles");
+				OutputStream output = new FileOutputStream("/mtn/sdcard/osmdroid/momofind_ktm.mbtiles");
 				
 				
 				byte data[] = new byte[1024];
@@ -204,13 +220,13 @@ public class Map extends Activity implements LocationListener{
 		protected void onPostExecute(String result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			mProgressDialog.show();
 		}
 
 		@Override
 		protected void onPreExecute() {
 			// TODO Auto-generated method stub
 			super.onPreExecute();
+			mProgressDialog.show();
 		}
 
 		@Override
@@ -249,23 +265,20 @@ public LocationResult locationResult = new LocationResult() {
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-//		lm.removeUpdates(this);
+
 	}
 
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-//		lm.requestLocationUpdates(towers, 500, 1, this);
+
 	}
 
 	@Override
 	public void onLocationChanged(Location location) {
 		// TODO Auto-generated method stub
-//		lat = (int) location.getLatitude();
-//		lng = (int) location.getLongitude();
-//		GeoPoint ourLocation = new GeoPoint(lat* 1000000 ,lng* 1000000);
-//		mc.setCenter(ourLocation);
+
 		
 	}
 
