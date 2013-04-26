@@ -1,3 +1,7 @@
 # cache for current jar dependecy. DO NOT EDIT.
 # format is <lastModified> <length> <SHA-1> <path>
 # Encoding is UTF-8
+1366968278000 268396 4992d81fdbbb2065483d2c9ea063f4a539e7309d /home/nirab/Android/workspace/OSMBonusPack/libs/osmdroid-android-3.0.8.jar
+1366522948000 268396 4992d81fdbbb2065483d2c9ea063f4a539e7309d /home/nirab/git/MomoFinder/MomoFinder/libs/osmdroid-android-3.0.8.jar
+1366968278000 28822 404eece4bb07ea211f5a879c22458775c612f0df /home/nirab/Android/workspace/OSMBonusPack/libs/slf4j-android-1.5.8.jar
+1366522948000 28822 404eece4bb07ea211f5a879c22458775c612f0df /home/nirab/git/MomoFinder/MomoFinder/libs/slf4j-android-1.5.8.jar

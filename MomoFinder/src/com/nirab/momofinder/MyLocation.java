@@ -8,7 +8,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-public class MyLocation{
+public class MyLocation {
     Timer timer1;
     LocationManager lm;
     LocationResult locationResult;
@@ -35,7 +35,7 @@ public class MyLocation{
         if(network_enabled)
             lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListenerNetwork);
         timer1=new Timer();
-        timer1.schedule(new GetLastLocation(), 60000);
+        timer1.schedule(new GetLastLocation(), 20000);
         return true;
     }
 
